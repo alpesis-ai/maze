@@ -1,5 +1,6 @@
 import numpy as np
 from enum import Enum
+from collections import deque
 
 
 class Action(Enum):
@@ -74,4 +75,30 @@ class Maze(object):
 
     def breadth_first(self):
         path = []
-        return path
+        queue = deque()
+        visited = []
+
+        branch = {}
+        found = False
+
+        while len(queue) > 0:
+            current_node = queue.popleft()
+            if current_node == self.goal:
+                print("Found a path.")
+                found = True
+                break;
+            else:
+                for x in self.valid_actions(self.grid, current_node):
+                    delta = x.value
+                    next_node = (current_node[0] + delta[0], current_node[1] + delta[1])
+                    if next_node not in visited:
+                        branch[next_node] = (current_node, x)
+        if found:
+            path = []
+            n = goal
+            while branch[n][0] != start:
+                path.append(branch[n][1])
+                n = branch[n][0]
+            path.append(branch[n][1])
+
+        return path[::-1]
