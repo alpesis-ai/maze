@@ -103,3 +103,8 @@ class Maze(object):
             path.append(branch[n][1])
 
         return path[::-1]
+
+
+    def depth_first(self):
+        path = []
+        return path[::-1] 
