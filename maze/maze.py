@@ -75,8 +75,8 @@ class Maze(object):
 
     def breadth_first(self):
         path = []
-        queue = deque()
-        visited = []
+        queue = deque(self.start)
+        visited = deque()
 
         branch = {}
         found = False
@@ -89,12 +89,13 @@ class Maze(object):
                 break;
             else:
                 for x in self.valid_actions(self.grid, current_node):
+                    print x
                     delta = x.value
                     next_node = (current_node[0] + delta[0], current_node[1] + delta[1])
                     if next_node not in visited:
+                        visted.append(current_node)
                         branch[next_node] = (current_node, x)
         if found:
-            path = []
             n = goal
             while branch[n][0] != start:
                 path.append(branch[n][1])
