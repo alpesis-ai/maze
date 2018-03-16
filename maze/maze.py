@@ -36,8 +36,7 @@ class Maze(object):
         """
         Returns a list of valid actions given a grid and current node.
         """
-        n = self.grid.shape[0] - 1
-        m = self.grid.shape[1] - 1
+        n, m = self.grid.shape[0] - 1, self.grid.shape[1] - 1
         x, y = current_node
         valid = [Action.UP, Action.LEFT, Action.RIGHT, Action.DOWN]
 
@@ -66,7 +65,7 @@ class Maze(object):
         position = self.start
         for x in path:
             solution[position[0], position[1]] = str(x)
-            position = (position[0] + x[0], position[1] + x[1])
+            position = (position[0] + x.value[0], position[1] + x.value[1])
 
         solution[position[0], position[1]] = 'G'
         solution[self.start[0], self.start[1]] = 'S'
@@ -76,7 +75,7 @@ class Maze(object):
     def breadth_first(self):
         path = []
         queue = deque()
-        visited = deque()
+        visited = []
 
         branch = {}
         found = False
@@ -90,10 +89,10 @@ class Maze(object):
                 break;
             else:
                 for x in self.valid_actions(current_node):
-                    delta = x
+                    delta = x.value
                     next_node = (current_node[0] + delta[0], current_node[1] + delta[1])
-                    queue.append(next_node)
                     if next_node not in visited:
+                        queue.append(next_node)
                         visited.append(current_node)
                         branch[next_node] = (current_node, x)
         if found:
