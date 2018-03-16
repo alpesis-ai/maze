@@ -66,7 +66,7 @@ class Maze(object):
         position = self.start
         for x in path:
             solution[position[0], position[1]] = str(x)
-            position = (position[0] + x.value[0], position[1] + x.value[1])
+            position = (position[0] + x[0], position[1] + x[1])
 
         solution[position[0], position[1]] = 'G'
         solution[self.start[0], self.start[1]] = 'S'
@@ -75,12 +75,13 @@ class Maze(object):
 
     def breadth_first(self):
         path = []
-        queue = deque(self.start)
+        queue = deque()
         visited = deque()
 
         branch = {}
         found = False
 
+        queue.append(self.start)
         while len(queue) > 0:
             current_node = queue.popleft()
             if current_node == self.goal:
@@ -88,16 +89,16 @@ class Maze(object):
                 found = True
                 break;
             else:
-                for x in self.valid_actions(self.grid, current_node):
-                    print x
-                    delta = x.value
+                for x in self.valid_actions(current_node):
+                    delta = x
                     next_node = (current_node[0] + delta[0], current_node[1] + delta[1])
+                    queue.append(next_node)
                     if next_node not in visited:
-                        visted.append(current_node)
+                        visited.append(current_node)
                         branch[next_node] = (current_node, x)
         if found:
-            n = goal
-            while branch[n][0] != start:
+            n = self.goal
+            while branch[n][0] != self.start:
                 path.append(branch[n][1])
                 n = branch[n][0]
             path.append(branch[n][1])
