@@ -13,3 +13,6 @@ if __name__ == '__main__':
 
     path, path_cost = maze_t.breath_first_priority_queue()
     print("breath_first_priority_queue: ", path_cost, "\n", maze_t.visualize_path(path))
+
+    path, path_cost = maze_t.breath_first_a_start()
+    print("breath_first_a_start: ", path_cost, "\n", maze_t.visualize_path(path))

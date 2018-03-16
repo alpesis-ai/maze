@@ -83,6 +83,11 @@ class Maze(object):
         return solution
 
 
+    def heuristic(self, position):
+        h = 0
+        return h
+
+
     def breath_first_deque(self):
         path = []
         path_cost = 0
@@ -187,4 +192,38 @@ class Maze(object):
                 n = branch[n][1]
             path.append(branch[n][2])
 
+        return path[::-1], path_cost
+
+
+    def breath_first_a_start(self):
+        path = []
+        path_cost = 0
+
+        queue = PriorityQueue()
+        visited = set(self.start)
+
+        branch = {}
+        found = False
+
+        while not queue.empty():
+            current_cost, current_node = queue.get()
+            if current_node == self.goal:
+                print("Found a path.")
+                found = True
+                break
+            else:
+                for action in self.valid_actions(current_node):
+                    next_node = (current_node[0] + action.delta[0], current_node[1] + action.delta[1])
+                    new_cost = current_cost + heuristic(next_node) + action.cost
+                    if next_node not in visited:
+                        visited.add(next_node)
+                        queue.put(new_cost, next_node)
+                        branch[next_node] = (new_cost, current_node, action)
+        if found:
+            n = self.goal
+            path_cost = branch[n][0]
+            while branch[n][1] != self.start:
+                path.append(branch[n][2])
+                n = branch[n][1]
+            path.append(branch[n][2])
         return path[::-1], path_cost
