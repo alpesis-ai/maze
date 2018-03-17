@@ -9,3 +9,24 @@ Prequisites
 ::
 
     $ python3 main.py
+    Found a path.
+    breath_first_a_start_deque:  476.588976907
+     [['S' 'O' ' ' ' ' ' ' ' ']
+     ['>' '>' 'v' ' ' ' ' ' ']
+     [' ' 'O' '>' '>' '>' 'v']
+     [' ' ' ' ' ' 'O' 'O' 'v']
+     [' ' ' ' ' ' 'O' 'G' '<']]
+    Found a path.
+    breath_first_a_start_queue:  280.498826449
+     [['S' 'O' ' ' ' ' ' ' ' ']
+     ['>' '>' '>' '>' '>' 'v']
+     [' ' 'O' ' ' ' ' ' ' 'v']
+     [' ' ' ' ' ' 'O' 'O' 'v']
+     [' ' ' ' ' ' 'O' 'G' '<']]
+    Found a path.
+    breath_first_a_start_priorityqueue:  34.5629686047
+     [['S' 'O' ' ' ' ' ' ' ' ']
+     ['>' '>' 'v' ' ' ' ' ' ']
+     [' ' 'O' '>' '>' '>' 'v']
+     [' ' ' ' ' ' 'O' 'O' 'v']
+     [' ' ' ' ' ' 'O' 'G' '<']]
