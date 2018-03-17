@@ -29,18 +29,22 @@ class Action(Enum):
 
 
 class Maze(object):
+    """
+    Solving the maze with breath first search (finding the shortest path).
 
-    def __init__(self):
-        self.grid = np.array([
-            [0, 1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0],
-            [0, 1, 0, 1, 0, 0],
-            [0, 0, 0, 1, 1, 0],
-            [0, 0, 0, 1, 0, 0],
-        ])
+    position: breath first search (partial plan)
 
-        self.start = (0, 0)
-        self.goal = (4, 4)
+    cost: evaulating the path performance
+      - node_cost
+      - cost = heuristic(node) + node_cost
+      - heuristic = sqrt((node[0] - goal[0])^2 + (node[1] - goal[1])**2)
+    """
+
+
+    def __init__(self, grid, start, goal):
+        self.grid = grid
+        self.start = start
+        self.goal = goal
 
 
     def valid_actions(self, current_node):
@@ -84,11 +88,11 @@ class Maze(object):
 
 
     def heuristic(self, position):
-        h = 0
+        h = np.sqrt((self.goal[0] - position[0])**2 + (self.goal[1] - position[1])**2)
         return h
 
 
-    def breath_first_deque(self):
+    def breath_first_a_start_deque(self):
         path = []
         path_cost = 0
 
@@ -108,7 +112,7 @@ class Maze(object):
             else:
                 for x in self.valid_actions(current_node):
                     next_node = (current_node[0] + x.delta[0], current_node[1] + x.delta[1])
-                    path_cost += x.cost
+                    path_cost += x.cost + self.heuristic(next_node)
                     if next_node not in visited:
                         queue.append(next_node)
                         visited.append(current_node)
@@ -123,7 +127,7 @@ class Maze(object):
         return path[::-1], path_cost
 
 
-    def breath_first_queue(self):
+    def breath_first_a_start_queue(self):
         path = []
         path_cost = 0
 
@@ -142,7 +146,7 @@ class Maze(object):
             else:
                 for action in self.valid_actions(current_node):
                     next_node = (current_node[0] + action.delta[0], current_node[1] + action.delta[1])
-                    path_cost += action.cost
+                    path_cost += action.cost + self.heuristic(next_node)
                     if next_node not in visited:
                         queue.put(next_node)
                         visited.add(next_node)
@@ -159,7 +163,7 @@ class Maze(object):
         return path[::-1], path_cost
        
  
-    def breath_first_priority_queue(self):
+    def breath_first_a_start_priorityqueue(self):
         path = []
         path_cost = 0
 
@@ -170,55 +174,20 @@ class Maze(object):
         branch = {}
         found = False
         while not queue.empty():
-            current_node_cost, current_node_delta = queue.get()
-            if current_node_delta == self.goal:
-                print('Found a path.')
-                found = True
-                break
-            else:
-                for action in self.valid_actions(current_node_delta):
-                    next_node_delta = (current_node_delta[0] + action.delta[0], current_node_delta[1] + action.delta[1])
-                    next_node_cost = current_node_cost + action.cost
-                    if next_node_delta not in visited:
-                        queue.put((next_node_cost, next_node_delta))
-                        visited.add(next_node_delta)
-                        branch[next_node_delta] = (next_node_cost, current_node_delta, action)
-
-        if found:
-            n = self.goal
-            path_cost = branch[n][0]
-            while branch[n][1] != self.start:
-                path.append(branch[n][2])
-                n = branch[n][1]
-            path.append(branch[n][2])
-
-        return path[::-1], path_cost
-
-
-    def breath_first_a_start(self):
-        path = []
-        path_cost = 0
-
-        queue = PriorityQueue()
-        visited = set(self.start)
-
-        branch = {}
-        found = False
-
-        while not queue.empty():
             current_cost, current_node = queue.get()
             if current_node == self.goal:
-                print("Found a path.")
+                print('Found a path.')
                 found = True
                 break
             else:
                 for action in self.valid_actions(current_node):
                     next_node = (current_node[0] + action.delta[0], current_node[1] + action.delta[1])
-                    new_cost = current_cost + heuristic(next_node) + action.cost
+                    next_cost = current_cost + action.cost + self.heuristic(next_node)
                     if next_node not in visited:
+                        queue.put((next_cost, next_node))
                         visited.add(next_node)
-                        queue.put(new_cost, next_node)
-                        branch[next_node] = (new_cost, current_node, action)
+                        branch[next_node] = (next_cost, current_node, action)
+
         if found:
             n = self.goal
             path_cost = branch[n][0]
@@ -226,4 +195,5 @@ class Maze(object):
                 path.append(branch[n][2])
                 n = branch[n][1]
             path.append(branch[n][2])
+
         return path[::-1], path_cost
